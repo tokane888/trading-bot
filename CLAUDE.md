@@ -32,25 +32,6 @@ This is a Go monorepo template for building microservices with shared packages. 
 
 5. **Structured logging**: All services use a shared logger package with slog, producing consistent JSON logs in production.
 
-## Testing Approach
-
-The template does not include test files. When adding tests:
-
-- Place unit tests alongside code files (e.g., `config_test.go`)
-- Use `internal/testutil/` for test helpers
-- Run tests from the service directory with `go test ./...`
-- Use table-driven tests as the default style
-- Name tests for a single function as `Test_validateConfig()` — `Test_` followed by the function name
-
-## CI/CD Pipeline
-
-GitHub Actions workflows handle:
-
-- Running golangci-lint across all Go modules
-- Checking code formatting with dprint
-- Matrix builds across services
-- Automatic PR checks
-
 ## Development Environment
 
 DevContainer provides:
@@ -59,17 +40,11 @@ DevContainer provides:
 - golangci-lint
 - dprint
 - lefthook
-- Git configuration
-- Support for Claude Code and GitHub Copilot
 
 ## Source Editing Notes
 
 - Do not delete comments without also removing or updating their corresponding source code
 - When making fixes via GitHub issues and running `git commit`, use JST timezone
-
-## golangci-lint Configuration
-
-- Important: .golangci.yml uses v2 format
 
 ## Verification
 
