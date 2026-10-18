@@ -1,0 +1,12 @@
+.tag
+
+# TODO: remove if not using Claude Code
+# exclude Claude Code settings files (.claude/settings.local.json at any depth)
+**/.claude/settings.local.json
+.serena
+# cipher temporary files
+data
+# Added by goreleaser init:
+dist/
+# environment variable file used for git worktree support
+.devcontainer/.env

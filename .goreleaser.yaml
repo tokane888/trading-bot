@@ -1,0 +1,79 @@
+# GoReleaser configuration for monorepo with unified versioning
+# Documentation: https://goreleaser.com
+
+# yaml-language-server: $schema=https://goreleaser.com/static/schema.json
+# vim: set ts=2 sw=2 tw=0 fo=cnqoj
+
+version: 2
+
+project_name: go-repository-template
+
+before:
+  hooks:
+    # Ensure all modules in services directory are up to date
+    - find services -name go.mod -exec dirname {} \; | xargs -I {} sh -c 'cd {} && go mod tidy'
+
+builds:
+  # Sample Service build configuration
+  - id: sample
+    dir: services/sample
+    main: ./cmd/sample
+    binary: sample
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - linux
+    goarch:
+      - amd64
+      - arm64
+    flags:
+      - -trimpath
+    ldflags:
+      - -s -w
+      - -X main.version={{.Version}}
+    mod_timestamp: "{{ .CommitTimestamp }}"
+
+archives:
+  # Sample Service archive
+  - id: sample-archive
+    ids:
+      - sample
+    name_template: >-
+      sample_
+      {{- .Version }}_
+      {{- title .Os }}_
+      {{- if eq .Arch "amd64" }}x86_64
+      {{- else }}{{ .Arch }}{{ end }}
+    files:
+      - none* # Only include the binary
+
+checksum:
+  name_template: "checksums.txt"
+  algorithm: sha256
+
+changelog:
+  sort: desc # list commits in newest-first order
+  use: github
+  filters:
+    exclude:
+      # exclude commits starting with "docs:" or "test:" as they are unrelated to releases
+      - "^docs:"
+      - "^test:"
+      - "Merge pull request"
+      - "Merge branch"
+
+release:
+  github:
+    owner: tokane888
+    name: go-repository-template
+  prerelease: auto
+  mode: append
+  header: |
+    ## {{.ProjectName}} {{.Tag}} ({{.Date}})
+
+    (Add release notes here)
+
+  footer: |
+    ---
+
+    Released by [GoReleaser](https://github.com/goreleaser/goreleaser).

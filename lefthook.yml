@@ -1,0 +1,77 @@
+---
+pre-commit:
+  commands:
+    # golangci-lint is skipped on commit since commits happen frequently
+    dprint-fmt:
+      run: |
+        files=$(echo "{staged_files}" | tr ' ' '\n' | grep -E '(Dockerfile|\.json|\.md)$' | grep -v 'devcontainer-lock\.json' || true)
+        if [ -n "$files" ]; then
+          echo "$files" # print target file names (dprint does not print them unlike go fmt)
+          echo "$files" | xargs -r dprint fmt
+        fi
+      stage_fixed: true
+
+    cspell:
+      run: |
+        files=$(echo "{staged_files}" | tr ' ' '\n' | grep -E '(Dockerfile|\.json|\.md)$' | grep -v 'devcontainer-lock\.json' || true)
+        if [ -n "$files" ]; then
+          echo "Spell checking files:"
+          echo "$files"
+          echo "$files" | xargs -r cspell --no-must-find-files || echo "⚠️  Spelling issues found. Please review and fix if necessary."
+        fi
+      # continue commit even if there are errors
+      fail_text: ""
+
+pre-push:
+  commands:
+    golangci-lint:
+      # run lint with monorepo support
+      run: |
+        # search for directories containing go.mod files
+        modules=$(find . -name "go.mod" 2>/dev/null | xargs dirname | sort)
+
+        if [ -z "$modules" ]; then
+          echo "No go.mod files found."
+          exit 0
+        fi
+
+        # run golangci-lint in each module
+        has_error=0
+        for module in $modules; do
+          echo "Running golangci-lint in $module"
+          if ! (cd "$module" && golangci-lint run ./...); then
+            echo "Error: golangci-lint failed in $module"
+            has_error=1
+          fi
+        done
+
+        # exit if any module had errors
+        if [ $has_error -eq 1 ]; then
+          exit 1
+        fi
+    deadcode:
+      run: |
+        # search for go.mod directories that contain a main package
+        main_modules=$(find . -name "go.mod" 2>/dev/null | xargs dirname | while read dir; do
+          grep -r --include="*.go" -l "^package main" "$dir" > /dev/null 2>&1 && echo "$dir"
+        done | sort)
+
+        if [ -z "$main_modules" ]; then
+          echo "No main package found."
+          exit 0
+        fi
+
+        has_error=0
+        for module in $main_modules; do
+          echo "Running deadcode in $module"
+          output=$(cd "$module" && deadcode ./... 2>&1)
+          if [ -n "$output" ]; then
+            echo "$output"
+            echo "Error: deadcode failed in $module"
+            has_error=1
+          fi
+        done
+
+        if [ $has_error -eq 1 ]; then
+          exit 1
+        fi

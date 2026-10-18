@@ -1,0 +1,56 @@
+version: "2"
+
+run:
+  go: "1.27.2"
+
+linters:
+  enable:
+    # Error checking
+    - errcheck # detect missing error checks
+    - errorlint # error handling best practices
+    - govet # detect compile errors and suspicious code
+    - staticcheck # advanced static analysis
+
+    # Code quality
+    - gocritic # code improvement suggestions
+    - gosec # security checks
+    - ineffassign # detect ineffectual assignments
+    - noctx # detect missing context usage
+    - rowserrcheck # error checks for database operations
+    - unused # dead code detection
+    - unparam # detect unused parameters and always-nil return values
+    - gocyclo # detect complex functions with many for/if/switch branches
+    - prealloc # detect inefficient repeated appends
+    - modernize # gopls-based suggestions to rewrite code using modern Go features (e.g. interface{}→any)
+    - lll # enforce max line length
+
+    # Performance
+    - perfsprint # string concatenation optimization
+  settings:
+    govet:
+      enable-all: true
+      disable:
+        - fieldalignment
+    revive:
+      rules:
+        - name: use-any
+          disabled: false
+    gosec:
+      excludes:
+        - G112 # Potential Slowloris Attack (ReadHeaderTimeout)
+    unparam:
+      check-exported: true
+    lll:
+      line-length: 120
+  exclusions:
+    rules:
+      # disable some linters for test files
+      - path: _test\.go
+        linters:
+          - errcheck
+          - gosec
+
+formatters:
+  enable:
+    - gofumpt
+    - goimports
