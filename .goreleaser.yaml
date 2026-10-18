@@ -6,7 +6,7 @@
 
 version: 2
 
-project_name: go-repository-template
+project_name: trading-bot
 
 before:
   hooks:
@@ -65,7 +65,7 @@ changelog:
 release:
   github:
     owner: tokane888
-    name: go-repository-template
+    name: trading-bot
   prerelease: auto
   mode: append
   header: |

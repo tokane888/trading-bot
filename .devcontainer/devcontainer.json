@@ -7,7 +7,6 @@
   "service": "app",
   "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "features": {
-    // TODO: Claude Code extension. Remove if not permitted in your environment.
     "ghcr.io/anthropics/devcontainer-features/claude-code:latest": {},
 
     "ghcr.io/devcontainers/features/docker-outside-of-docker:latest": { "moby": false },
@@ -80,19 +79,13 @@
     // mount SSH keys to enable git pull/push from inside the devcontainer
     "source=${localEnv:HOME}/.ssh,target=/tmp/.ssh,type=bind,consistency=cached",
     // GitHub CLI configuration
-    // TODO: remove if not using gh
     "source=${localEnv:HOME}/.config/gh,target=/home/vscode/.config/gh,type=bind,consistency=cached",
 
-    // TODO: remove if Claude Code is not permitted in your environment
     "source=${localEnv:HOME}/.claude,target=/home/vscode/.claude,type=bind,consistency=cached",
     "source=${localEnv:HOME}/.claude.json,target=/home/vscode/.claude.json,type=bind,consistency=cached"
   ],
   "postCreateCommand": "bash ./.devcontainer/postCreateCommand.sh",
   "postStartCommand": "bash ./.devcontainer/postStartCommand.sh",
-  // TODO: remove if not using AI
-  "remoteEnv": {
-    "ANTHROPIC_API_KEY": "${localEnv:ANTHROPIC_API_KEY}"
-  },
   "containerEnv": {
     "TZ": "Asia/Tokyo"
   }

@@ -20,60 +20,6 @@ This is a Go monorepo template for building microservices with shared packages. 
 └── .github/           # GitHub Actions workflows
 ```
 
-## Development Commands
-
-### Running Services
-
-```bash
-# Run from the service directory (e.g., services/sample/)
-go run cmd/sample/main.go
-```
-
-### Linting
-
-```bash
-# Run golangci-lint (from any Go module directory)
-golangci-lint run
-
-# Auto-fix some issues
-golangci-lint run --fix
-```
-
-### Formatting
-
-```bash
-# Format Go code (handled by gofumpt via golangci-lint)
-golangci-lint run --fix
-
-# Format other files (JSON, Markdown, YAML, TOML)
-dprint fmt
-
-# Check formatting without changes
-dprint check
-```
-
-### Module Management
-
-```bash
-# Update service dependencies
-cd services/sample
-go mod tidy
-
-# Update all modules
-find . -name go.mod -exec dirname {} \; | xargs -I {} sh -c 'cd {} && go mod tidy'
-```
-
-### Git Hooks
-
-```bash
-# Install git hooks (run from repository root)
-lefthook install
-
-# Run hooks manually
-lefthook run pre-commit
-lefthook run pre-push
-```
-
 ## Architecture Decisions
 
 1. **Monorepo structure**: Services and packages are managed in a single repository, making shared code management and consistent tooling easier.
@@ -85,22 +31,6 @@ lefthook run pre-push
 4. **Configuration management**: Uses godotenv to load environment-specific configuration from `.env/.env.{ENV}` files.
 
 5. **Structured logging**: All services use a shared logger package with slog, producing consistent JSON logs in production.
-
-## Key Configuration Files
-
-- `.golangci.yml`: Comprehensive linting rules including security checks, error handling, and style enforcement
-- `dprint.json`: Formatting rules for non-Go files
-- `.lefthook.yml`: Git hook configuration for automatic formatting and linting
-- `.devcontainer/devcontainer.json`: VS Code development environment with all tools pre-installed
-
-## Important TODOs
-
-When using this template, address the following TODOs:
-
-1. **Module name**: Update module paths in all `go.mod` files from `github.com/tokane888/go-repository-template` to your repository
-2. **Import paths**: Update import statements in Go files to match the new module name
-3. **Service name**: Rename the sample service and update configuration
-4. **Environment variables**: Set appropriate values in `.env` files
 
 ## Testing Approach
 

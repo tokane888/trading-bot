@@ -5,8 +5,8 @@ import (
 	"log"
 	"log/slog"
 
-	pkglogger "github.com/tokane888/go-repository-template/pkg/logger"
-	"github.com/tokane888/go-repository-template/services/sample/internal/config"
+	"github.com/tokane888/gtrading-bot/services/sample/internal/config"
+	pkglogger "github.com/tokane888/trading-bot/pkg/logger"
 )
 
 // App version. Defaults to dev build. On cloud, injected at build time via -ldflags.

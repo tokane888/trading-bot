@@ -3,7 +3,6 @@
 lefthook install
 
 # mcp install
-# TODO: remove if not using Claude Code
 
 # add only if context7 does not already exist
 if ! claude mcp list 2>/dev/null | grep -q "context7"; then

@@ -5,7 +5,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"github.com/tokane888/go-repository-template/pkg/logger"
+	"github.com/tokane888/trading-bot/pkg/logger"
 )
 
 // Config reads environment variables and holds per-struct configuration.
